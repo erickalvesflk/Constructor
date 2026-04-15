@@ -1,0 +1,32 @@
+{
+    "config": {
+        "cooldown": 1.0,
+        "flag": "0",
+        "language": "visualg",
+        "studentName": "Erick Alves",
+        "creates": 0,
+        "limitDescPerLine": 60
+    },
+    "patterns": {
+        "visualg": {
+            "template": "Algoritmo !n \n\n// Aluno : !s \n// Dia : !t \n// !d \n\nVar\n\nn : inteiro\n\nInicio\n\nescreval(!T)\nescreval(!v)\nescreva(!v)\nleia(!v)\nescreval(!v)\n\nFimalgoritmo\n",
+            "extension": "alg",
+            "comment": "//"
+        },
+        "python": {
+            "template": "# Projeto : !n \n\n# - Aluno : !s \n# - Dia : !t \n# - !d \n\n# Var\n\n\n\n# Programa:\n\n",
+            "extension": "py",
+            "comment": "# -"
+        },
+        "javascript": {
+            "template": "// Projeto : !n \n\n// - Aluno : !s \n// - Dia : !t \n// - !d \n\n// - Var\n\n\n\n// - Programa:\n\n",
+            "extension": "js",
+            "comment": "// - "
+        },
+        "c": {
+            "template": "",
+            "extension": "",
+            "comment": ""
+        }
+    }
+}
