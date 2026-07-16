@@ -1,7 +1,7 @@
 # IMPORTAÇÕES
 from textwrap import dedent
 from time import sleep, strftime
-from colorama import Fore, Style, init
+from colorama import init
 import os, json, format, data
 init(autoreset=True) # Inicializando o colorama
 # VARIÁVEIS

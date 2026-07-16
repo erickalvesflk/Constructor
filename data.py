@@ -1,4 +1,4 @@
-import json
+import json, os
 from colorama import Fore, Style
 
 dataConfigs = {
@@ -13,7 +13,9 @@ dataConfigs = {
     }
 }
 
-with open("config.json","r",encoding="UTF-8") as dataJson:
+diretorio_script = os.path.dirname(os.path.abspath(__file__))
+
+with open(rf"{diretorio_script}\config.json","r",encoding="UTF-8") as dataJson:
     dataConfigs = json.load(dataJson)
     dataJson.close()
 
@@ -36,7 +38,7 @@ COLORS = {
 }
 
 def saveJson():
-    with open("config.json","w",encoding="UTF-8") as dataJson:
+    with open(rf"{diretorio_script}\config.json","w",encoding="UTF-8") as dataJson:
             json.dump(dataConfigs, dataJson, ensure_ascii=False, indent=4)
             dataJson.close()
 
