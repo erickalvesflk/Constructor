@@ -1,6 +1,6 @@
-import json, os
+import json
 from typing import Literal
-from constants import CONSTRUCTOR_PATH_FOLDER, Colors
+from src.constants import CONSTRUCTOR_PATH_FOLDER, Colors
 from colorama import Fore, Style
 
 type DataKey = Literal["cooldown"] | Literal["flag"] | Literal["studentName"] | Literal["language"] | Literal["limitDescPerLine"]

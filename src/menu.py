@@ -1,9 +1,10 @@
-from constants import Colors, TARGET_FOLDER_PATH
+from src.constants import Colors, TARGET_FOLDER_PATH
 from subprocess import run as runComandCMD
 from typing import Literal, TypedDict, Callable, Any
 from time import sleep
-from data import Config
-import re, src.fileCreator as fileCreator
+from src.data import Config
+import re
+import src.fileCreator as fileCreator
 
 class FilePayload(TypedDict):
     name: str
@@ -100,6 +101,13 @@ class RenderGraphics:
         sleep(COOLDOWN)
 
     @staticmethod
+    def sucessFileCreation():
+        COOLDOWN = Config.getValue("cooldown")
+        RenderGraphics.doPrint(f"{Colors.GREEN}- Arquivo Criado!\n")
+        sleep(COOLDOWN)
+
+
+    @staticmethod
     def instruct(key : str, desc : str, inverted = False) -> str:
         """
             Returna o texto estilizado: "- Infome ([key]) para [desc]"
@@ -128,15 +136,16 @@ class Menu:
             if menu_response == "exit": break
 
             if menu_response == "config":
-                runComandCMD("cls",shell=True)
                 while True:
+                    runComandCMD("cls",shell=True)
                     config_response = Menu.config_interface()
                     RenderGraphics.alert_config_change(config_response)
 
                     if config_response == "exit": break
 
             if menu_response[0] == "create-file": 
-                fileCreator.createScript(Config.getValue("language"),menu_response[1]["name"],menu_response[1]["desc"],TARGET_FOLDER_PATH)
+                op = fileCreator.createScript(Config.getValue("language"),menu_response[1]["name"],menu_response[1]["desc"],TARGET_FOLDER_PATH)
+                if op : RenderGraphics.sucessFileCreation()
 
             runComandCMD("cls",shell=True)
 
@@ -221,5 +230,3 @@ class Menu:
         response_second = RenderGraphics.requestInput("Informe a descrição desse projeto")
 
         return ("create-file",{"name": response_first, "desc": response_second})
-
-Menu.initCore()

@@ -1,5 +1,4 @@
-
-from data import Config
+from src.data import Config
 from time import strftime
 
 def format_desc(desc : str, comment: str):
@@ -16,7 +15,7 @@ def format_desc(desc : str, comment: str):
 
         return desc_formated
 
-def createScript(archiveType:str,nameProject:str,desc:str,path):
+def createScript(archiveType:str,nameProject:str,desc:str,path) -> bool:
 
     """
     Cria o texto do arquivo, informe a linguagem, nome do projeto e a descrição.
@@ -57,3 +56,5 @@ def createScript(archiveType:str,nameProject:str,desc:str,path):
     with open(path+f"\\{nameProject.replace(" ","")}.{PATTERN["extension"]}", "w", encoding="utf-8") as arquive:
         arquive.write(script)
         arquive.close()
+        
+        return True
