@@ -160,7 +160,7 @@ class Menu:
         RenderGraphics.doPrint(f"{Colors.YELLOW}=== GERADOR DE ARQUIVOS (Configurações) === \n\n")
 
         RenderGraphics.drawBoxInstructions("Configurações :", Colors.CYAN,
-            f" - Linguagem ({Colors.MAGENTA}l{Colors.LIGHT_CYAN}) : {Config.getValue("language")}",
+            f" - Modelo ({Colors.MAGENTA}m{Colors.LIGHT_CYAN}) : {Config.getValue("language")}",
             f" - Nome do Usuário ({Colors.MAGENTA}u{Colors.LIGHT_CYAN}) : {Config.getValue("studentName")}",
             f" - Tamanho maximo de linha ({Colors.MAGENTA}t{Colors.LIGHT_CYAN}) : {Config.getValue("limitDescPerLine")}",
             f" - Cooldown ({Colors.MAGENTA}c{Colors.LIGHT_CYAN}) : {Config.getValue("cooldown")}",
@@ -171,7 +171,7 @@ class Menu:
         response = RenderGraphics.requestInput(f"Informe a configuração que deseja alterar")
 
         config_commands: dict[str, dict[Literal["key", "type"], Any]] = {
-            "l":  {"key": "language", "type": str},
+            "m": {"key": "language", "type": str},
             "u": {"key": "studentName", "type": str},
             "t": {"key": "limitDescPerLine", "type": int},
             "c": {"key": "cooldown", "type": float},
@@ -181,7 +181,7 @@ class Menu:
         if (response == FLAG):
             return "exit"
         
-        if (response == "l"):
+        if (response == "m"):
             RenderGraphics.doPrint(f"\n{Colors.LIGHT_CYAN}| Moldes disponíveis : \n")
 
             for language in Config.getAllProgamingLanguages():
