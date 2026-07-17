@@ -13,9 +13,10 @@ dataConfigs = {
     }
 }
 
-diretorio_script = os.path.dirname(os.path.abspath(__file__))
+actual_folder = os.path.dirname(os.path.abspath(__file__))
+parent_folder = os.path.dirname(actual_folder)
 
-with open(rf"{diretorio_script}\config.json","r",encoding="UTF-8") as dataJson:
+with open(rf"{parent_folder}\config.json","r",encoding="UTF-8") as dataJson:
     dataConfigs = json.load(dataJson)
     dataJson.close()
 
@@ -38,7 +39,7 @@ COLORS = {
 }
 
 def saveJson():
-    with open(rf"{diretorio_script}\config.json","w",encoding="UTF-8") as dataJson:
+    with open(rf"{parent_folder}\config.json","w",encoding="UTF-8") as dataJson:
             json.dump(dataConfigs, dataJson, ensure_ascii=False, indent=4)
             dataJson.close()
 

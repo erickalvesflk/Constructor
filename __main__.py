@@ -2,7 +2,7 @@
 from textwrap import dedent
 from time import sleep, strftime
 from colorama import init
-import os, json, format, data
+import os, json, src.format as format, src.data as data
 init(autoreset=True) # Inicializando o colorama
 # VARIÁVEIS
     
@@ -15,21 +15,6 @@ flag = data.configs["flag"]
 studentName = data.configs["studentName"]
 
 # PROGRAMA
-
-def drawBoxInstructions (title, color, *texts):
-    maxWidth = len(texts[0])
-
-    for text in texts :
-        if (maxWidth < len(text)):
-            maxWidth = len(text)
-    
-    print(f"{color}{title} \n",end=COLORS["RESET"])
-    print(f"{color}|"+ ("‾" * (maxWidth + 5)) + "|\n",end=COLORS["RESET"])
-
-    for text in texts :
-        print(f"{color}| {text}"+ (" " * (maxWidth - len(text) + 14)) + "|\n",end=COLORS["RESET"])
-
-    print(f"{color}|"+ ("_" * (maxWidth + 5)) + "|\n\n",end=COLORS["RESET"])
 
 
 while executing :
