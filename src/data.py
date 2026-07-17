@@ -1,79 +1,61 @@
 import json, os
+from typing import Literal
+from constants import CONSTRUCTOR_PATH_FOLDER, Colors
 from colorama import Fore, Style
 
-dataConfigs = {
-    "config": {
-        "cooldown": 1.0,
-        "flag": "0",
-        "language": "visualg",
-        "creates": 0
-    },
-    "patterns": {
-       
-    }
-}
+type DataKey = Literal["cooldown"] | Literal["flag"] | Literal["studentName"] | Literal["language"] | Literal["limitDescPerLine"]
 
-actual_folder = os.path.dirname(os.path.abspath(__file__))
-parent_folder = os.path.dirname(actual_folder)
+class ConfigJsonManipulator:
 
-with open(rf"{parent_folder}\config.json","r",encoding="UTF-8") as dataJson:
-    dataConfigs = json.load(dataJson)
-    dataJson.close()
+    def __init__(self):
+        self.CONFIG_JSON_PATH = rf"{CONSTRUCTOR_PATH_FOLDER}\config.json"
 
-configs = {
-    "cooldown" : dataConfigs["config"]["cooldown"],
-    "flag" : dataConfigs["config"]["flag"],
-    "studentName" : dataConfigs["config"]["studentName"],
-    "language" : dataConfigs["config"]["language"],
-    "limitDescPerLine" : dataConfigs["config"]["limitDescPerLine"]
-}
+        with open(self.CONFIG_JSON_PATH,"r",encoding="UTF-8") as dataJson:
+            self.dataConfigs = json.load(dataJson)
+            dataJson.close()  
 
-COLORS = {
-    "VERDE" : Fore.GREEN,
-    "RESET" : Style.RESET_ALL,
-    "VERMELHO" : Fore.RED,
-    "AMARELO": Fore.YELLOW,
-    "CIANO": Fore.CYAN,
-    "LCIANO": Fore.LIGHTCYAN_EX,
-    "MAGENTA": Fore.LIGHTMAGENTA_EX
-}
+    def saveJson(self):
 
-def saveJson():
-    with open(rf"{parent_folder}\config.json","w",encoding="UTF-8") as dataJson:
-            json.dump(dataConfigs, dataJson, ensure_ascii=False, indent=4)
+        with open(self.CONFIG_JSON_PATH,"w",encoding="UTF-8") as dataJson:
+            json.dump(self.dataConfigs, dataJson, ensure_ascii=False, indent=4)
             dataJson.close()
 
-def saveConfig(dataName : str, value):
-    try:
+    def changeValue(self, dataKey : DataKey, newValue : any) -> bool:
 
-        if not(type(dataConfigs["config"][dataName])) :
-            print(f"\n[Erro] - {dataName} não existe em config.json .")
-            return False
-        
-        if (type(dataConfigs["config"][dataName]) != type(value)):
-            print(f"\n[Erro] - o valor informado ({type(value)} não é do mesmo tipo que {dataName} {type(dataConfigs["config"][dataName])}.")
-            return False
-        
-        dataConfigs["config"][dataName] = value
-        configs[dataName] = value
+        if not (dataKey in self.dataConfigs["config"]): raise KeyError("This key don't exist in the JSON!")
+        if (type(self.dataConfigs["config"][dataKey]) != type(newValue)): raise TypeError("The types are diferents")
 
-        saveJson()
+        if dataKey == "language":
+            # Special
+            if not(newValue in list(self.dataConfigs["patterns"].keys())): return False
 
+        self.dataConfigs["config"][dataKey] = newValue
+        self.saveJson()
         return True
+
+
+DATA = ConfigJsonManipulator()
+class Config:
     
-    except:
+    def __init__(self):
+        ...
 
-        print("Erro inesperado!")
-        return False
+    @staticmethod
+    def getValue(key : DataKey) -> any:
+        if(key in DATA.dataConfigs["config"]):
+            return DATA.dataConfigs["config"][key]
+        else:
+            raise KeyError("This key don't exist in the JSON!")
     
-def changeLanguage(newLanguage : str):
-
-    if not(newLanguage in dataConfigs["patterns"].keys()):
-        return False
+    @staticmethod
+    def getAllProgamingLanguages() -> list[str]:
+        return list(DATA.dataConfigs["patterns"].keys())
     
-    configs["language"] = newLanguage
-    dataConfigs["config"]["language"] = newLanguage
-
-    saveJson()
-
-    return True
+    @staticmethod
+    def getProgamingLanguages(language) -> list[str]:
+        if(language in Config.getAllProgamingLanguages()):
+            return DATA.dataConfigs["patterns"][language]
+    
+    @staticmethod
+    def changeValue(dataKey : DataKey, newValue : any) -> bool:
+        return DATA.changeValue(dataKey, newValue)

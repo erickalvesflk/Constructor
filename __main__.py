@@ -2,24 +2,24 @@
 from textwrap import dedent
 from time import sleep, strftime
 from colorama import init
-import os, json, src.format as format, src.data as data
+import os, json, src.fileCreator as fileCreator, src.dataOLD as dataOLD
 init(autoreset=True) # Inicializando o colorama
 # VARIÁVEIS
     
 path = os.getcwd()
 executing = True
 
-COLORS = data.COLORS
-cooldown = data.configs["cooldown"]
-flag = data.configs["flag"]
-studentName = data.configs["studentName"]
+COLORS = dataOLD.COLORS
+cooldown = dataOLD.configs["cooldown"]
+flag = dataOLD.configs["flag"]
+studentName = dataOLD.configs["studentName"]
 
 # PROGRAMA
 
 
 while executing :
 
-    print(f"{COLORS["AMARELO"]}=== GERADOR DE ARQUIVOS ({data.configs["language"].capitalize()}) === \n\n",end=COLORS["RESET"])
+    print(f"{COLORS["AMARELO"]}=== GERADOR DE ARQUIVOS ({dataOLD.configs["language"].capitalize()}) === \n\n",end=COLORS["RESET"])
 
     drawBoxInstructions("Instruções : ", COLORS["MAGENTA"],
         f" - Informe{COLORS["CIANO"]} {flag}{COLORS["MAGENTA"]} para encerrar o programa",
@@ -41,11 +41,11 @@ while executing :
             print(f"{COLORS["AMARELO"]}=== GERADOR DE ARQUIVOS (Configurações) === \n\n",end=COLORS["RESET"])
 
             drawBoxInstructions("Configurações :", COLORS["LCIANO"],
-                f" - Linguagem ({COLORS["MAGENTA"]}l{COLORS["LCIANO"]}) : {data.configs["language"]}",
-                f" - Nome do Usuário ({COLORS["MAGENTA"]}u{COLORS["LCIANO"]}) : {data.configs["studentName"]}",
-                f" - Tamanho maximo de linha ({COLORS["MAGENTA"]}t{COLORS["LCIANO"]}) : {data.configs["limitDescPerLine"]}",
-                f" - Cooldown ({COLORS["MAGENTA"]}c{COLORS["LCIANO"]}) : {data.configs["cooldown"]}",
-                f' - flag ({COLORS["MAGENTA"]}f{COLORS["LCIANO"]}) : "{data.configs["flag"]}"',
+                f" - Linguagem ({COLORS["MAGENTA"]}l{COLORS["LCIANO"]}) : {dataOLD.configs["language"]}",
+                f" - Nome do Usuário ({COLORS["MAGENTA"]}u{COLORS["LCIANO"]}) : {dataOLD.configs["studentName"]}",
+                f" - Tamanho maximo de linha ({COLORS["MAGENTA"]}t{COLORS["LCIANO"]}) : {dataOLD.configs["limitDescPerLine"]}",
+                f" - Cooldown ({COLORS["MAGENTA"]}c{COLORS["LCIANO"]}) : {dataOLD.configs["cooldown"]}",
+                f' - flag ({COLORS["MAGENTA"]}f{COLORS["LCIANO"]}) : "{dataOLD.configs["flag"]}"',
             )
 
             print(f'{COLORS["MAGENTA"]}- Informe ({COLORS["LCIANO"]}0{COLORS["MAGENTA"]}) para voltar a tela principal \n')
@@ -68,7 +68,7 @@ while executing :
             if (config in ["u","t","c","f"]):
 
                 value = newValue(config)
-                operation = data.saveConfig(commands[config][0],commands[config][1](value))
+                operation = dataOLD.saveConfig(commands[config][0],commands[config][1](value))
 
                 if operation:
                     print(f"\n{COLORS["VERDE"]}- A configuração foi salva!",end=COLORS["RESET"])
@@ -82,12 +82,12 @@ while executing :
             elif (config == "l"):
                 print(f"\n{COLORS["LCIANO"]}| Moldes disponíveis : \n",end=COLORS["RESET"])
 
-                for pattern in data.dataConfigs["patterns"].keys():
+                for pattern in dataOLD.dataConfigs["patterns"].keys():
                     print(f"{COLORS["LCIANO"]}| - {pattern} \n",end=COLORS["RESET"])
 
                 language_value = input(f"\n{COLORS["MAGENTA"]}| - Informe o molde que deseja utilizar :{COLORS["RESET"]}")
 
-                operation = data.changeLanguage(language_value)
+                operation = dataOLD.changeLanguage(language_value)
 
                 if (operation):
                     print(f"\n{COLORS["VERDE"]}- Molde aplicado!",end=COLORS["RESET"])
@@ -113,8 +113,8 @@ while executing :
 
     userDescAq = input(f"{COLORS["CIANO"]}- Informe a descrição desse projeto: {COLORS["RESET"]}")
 
-    format.createScript(data.configs["language"],userNameAq,userDescAq,path)
-    print(f"\n{COLORS["VERDE"]}- Arquivo {userNameAq.replace(" ","")}.{data.dataConfigs["patterns"][data.configs["language"]]["extension"]} criado!",end=COLORS["RESET"])
+    fileCreator.createScript(dataOLD.configs["language"],userNameAq,userDescAq,path)
+    print(f"\n{COLORS["VERDE"]}- Arquivo {userNameAq.replace(" ","")}.{dataOLD.dataConfigs["patterns"][dataOLD.configs["language"]]["extension"]} criado!",end=COLORS["RESET"])
     sleep(cooldown)
     
     os.system('cls' if os.name == 'nt' else 'clear')

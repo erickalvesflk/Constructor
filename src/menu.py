@@ -1,16 +1,16 @@
 from constants import Colors, TARGET_FOLDER_PATH
 from subprocess import run as runComandCMD
-from typing import Literal, TypedDict, Callable
+from typing import Literal, TypedDict, Callable, Any
 from time import sleep
-import data, format, re
+from data import Config
+import re, src.fileCreator as fileCreator
 
 class FilePayload(TypedDict):
     name: str
     desc: str
 
-COOLDOWN = data.configs["cooldown"]
-FLAG = data.configs["flag"]
-STUDENTNAME = data.configs["studentName"]
+
+
 type menu_response_type = tuple[Literal["exit"]] | tuple[Literal["invalid-response"]] | tuple[Literal["config"]] | tuple[Literal["create-file"], FilePayload]
 type config_response_type = Literal["exit"] | Literal["fail-apply"] | Literal["sucess-apply"]
 
@@ -67,11 +67,13 @@ class RenderGraphics:
         """
             Exibe por um intervalo de [cooldown]s um alerta sobre a dinâmica de interfaces
         """
+        COOLDOWN = Config.getValue("cooldown")
+
         pattern: dict[str, Callable[[], None]] = {
-            "exit": lambda: RenderGraphics.doPrint(f"{Colors.RED}- Programa encerrado!\n"),
-            "config": lambda: RenderGraphics.doPrint(f"{Colors.MAGENTA}- Abrindo configurações...\n"),
-            "invalid-response": lambda: RenderGraphics.doPrint(f"{Colors.RED}- Input Inválido...\n"),
-            "create-file": lambda: RenderGraphics.doPrint(f"{Colors.GREEN}- Criando arquivo...\n")
+            "exit": lambda: RenderGraphics.doPrint(f"\n{Colors.RED}- Programa encerrado!\n"),
+            "config": lambda: RenderGraphics.doPrint(f"\n{Colors.MAGENTA}- Abrindo configurações...\n"),
+            "invalid-response": lambda: RenderGraphics.doPrint(f"\n{Colors.RED}- Input Inválido...\n"),
+            "create-file": lambda: RenderGraphics.doPrint(f"\n{Colors.GREEN}- Criando arquivo...\n")
         }
 
         try:
@@ -81,14 +83,17 @@ class RenderGraphics:
 
         sleep(COOLDOWN)
 
+    @staticmethod
     def alert_config_change(config_response : config_response_type):
         """
             Exibe por um intervalo de [cooldown]s um alerta sobre a dinâmica de interfaces
         """
+        COOLDOWN = Config.getValue("cooldown")
+
         pattern: dict[str, Callable[[], None]] = {
-            "exit": lambda: RenderGraphics.doPrint(f"{Colors.RED}- Saindo das Configurações!\n"),
-            "sucess-apply": lambda: RenderGraphics.doPrint(f"{Colors.GREEN}- Configuração aplicada com sucesso!\n"),
-            "fail-apply": lambda: RenderGraphics.doPrint(f"{Colors.RED}- Falha ao configurar\n"),
+            "exit": lambda: RenderGraphics.doPrint(f"\n{Colors.RED}- Saindo das Configurações!\n\n"),
+            "sucess-apply": lambda: RenderGraphics.doPrint(f"\n{Colors.GREEN}- Configuração aplicada com sucesso!\n\n"),
+            "fail-apply": lambda: RenderGraphics.doPrint(f"\n{Colors.RED}- Falha ao configurar\n\n"),
         }
 
         pattern[config_response]()
@@ -103,8 +108,6 @@ class RenderGraphics:
         color_2 = Colors.LIGHT_CYAN if inverted else Colors.MAGENTA
 
         return f"{color_1}- Informe ({color_2}{key}{color_1}) para {desc}"
-
-
 
 class Menu:
     """
@@ -133,7 +136,7 @@ class Menu:
                     if config_response == "exit": break
 
             if menu_response[0] == "create-file": 
-                format.createScript(data.configs["language"],menu_response[1]["name"],menu_response[1]["desc"],TARGET_FOLDER_PATH)
+                fileCreator.createScript(Config.getValue("language"),menu_response[1]["name"],menu_response[1]["desc"],TARGET_FOLDER_PATH)
 
             runComandCMD("cls",shell=True)
 
@@ -144,25 +147,26 @@ class Menu:
         """
             Método que exibe a interface de configuração do programa, retornando a resposta do client.
         """
+        FLAG = Config.getValue("flag")
         RenderGraphics.doPrint(f"{Colors.YELLOW}=== GERADOR DE ARQUIVOS (Configurações) === \n\n")
 
         RenderGraphics.drawBoxInstructions("Configurações :", Colors.CYAN,
-            f" - Linguagem ({Colors.MAGENTA}l{Colors.LIGHT_CYAN}) : {data.configs["language"]}",
-            f" - Nome do Usuário ({Colors.MAGENTA}u{Colors.LIGHT_CYAN}) : {data.configs["studentName"]}",
-            f" - Tamanho maximo de linha ({Colors.MAGENTA}t{Colors.LIGHT_CYAN}) : {data.configs["limitDescPerLine"]}",
-            f" - Cooldown ({Colors.MAGENTA}c{Colors.LIGHT_CYAN}) : {data.configs["cooldown"]}",
-            f' - flag ({Colors.MAGENTA}f{Colors.LIGHT_CYAN}) : "{data.configs["flag"]}"'
+            f" - Linguagem ({Colors.MAGENTA}l{Colors.LIGHT_CYAN}) : {Config.getValue("language")}",
+            f" - Nome do Usuário ({Colors.MAGENTA}u{Colors.LIGHT_CYAN}) : {Config.getValue("studentName")}",
+            f" - Tamanho maximo de linha ({Colors.MAGENTA}t{Colors.LIGHT_CYAN}) : {Config.getValue("limitDescPerLine")}",
+            f" - Cooldown ({Colors.MAGENTA}c{Colors.LIGHT_CYAN}) : {Config.getValue("cooldown")}",
+            f' - flag ({Colors.MAGENTA}f{Colors.LIGHT_CYAN}) : "{FLAG}"'
         )
         
         print(f"{RenderGraphics.instruct(FLAG,"para retornar ao menu.",True)}")
         response = RenderGraphics.requestInput(f"Informe a configuração que deseja alterar")
 
-        config_commands = {
-            "l" : ["language"],
-            "u" : ["studentName",str],
-            "t" : ["limitDescPerLine",int],
-            "c" : ["cooldown",float],
-            "f" : ["flag",str],
+        config_commands: dict[str, dict[Literal["key", "type"], Any]] = {
+            "l":  {"key": "language", "type": str},
+            "u": {"key": "studentName", "type": str},
+            "t": {"key": "limitDescPerLine", "type": int},
+            "c": {"key": "cooldown", "type": float},
+            "f": {"key": "flag", "type": str}
         }
 
         if (response == FLAG):
@@ -171,26 +175,21 @@ class Menu:
         if (response == "l"):
             RenderGraphics.doPrint(f"\n{Colors.LIGHT_CYAN}| Moldes disponíveis : \n")
 
-            for pattern in data.dataConfigs["patterns"].keys():
-                RenderGraphics.doPrint(f"{Colors.LIGHT_CYAN}| - {pattern} \n")
-
-            language_value = RenderGraphics.requestInput("Informe o molde que deseja utilizar")
-
-            operation = data.changeLanguage(language_value)
-
-            if (operation):
-                return "sucess-apply"
-            else:
-                return "fail-apply"
+            for language in Config.getAllProgamingLanguages():
+                RenderGraphics.doPrint(f"{Colors.LIGHT_CYAN}| - {language} \n")
         
         if (response in list(config_commands.keys())):
             newValue = RenderGraphics.requestConfigInput(response)
-            change_value_sucess = data.saveConfig(config_commands[response][0],config_commands[response][1](newValue))
 
-            if change_value_sucess:
-                return "sucess-apply"
-            else:
-                return "fail-apply"
+            Config.changeValue(config_commands[response]["key"], config_commands[response]["type"](newValue))
+
+        
+        operation = Config.changeValue(config_commands[response]["key"], config_commands[response]["type"](newValue))
+
+        if operation: 
+            return "sucess-apply"
+        else: 
+            return "fail-apply"
 
 
 
@@ -199,7 +198,9 @@ class Menu:
         """
             Método que exibe a interface principal do programa, retornando a resposta do client.
         """
-        RenderGraphics.doPrint(f"{Colors.YELLOW}=== GERADOR DE ARQUIVOS ({data.configs["language"].capitalize()}) === \n\n")
+        FLAG = Config.getValue("flag")
+
+        RenderGraphics.doPrint(f"{Colors.YELLOW}=== GERADOR DE ARQUIVOS ({Config.getValue("language").capitalize()}) === \n\n")
 
         RenderGraphics.drawBoxInstructions("Instruções : ", Colors.MAGENTA,
             RenderGraphics.instruct(FLAG, "para encerrar o programa."),
