@@ -105,7 +105,6 @@ Configurações :
 | - python
 | - javascript
 | - c
-
 - Informe o novo valor para m: javascript
 
 - Configuração aplicada com sucesso!
@@ -131,17 +130,17 @@ Onde:
 -   **comment**: comentário da linguagem (ex.: `//`).
 -   **template**: conteúdo inicial do arquivo.
 
-Palavras-chave disponíveis:
+Dentro do campo `template`, é possível utilizar as seguintes palavras-chave:
 
-  Palavra-chave   Descrição
-  --------------- ----------------------------------------------------
-  `!T`            Nome do projeto estilizado (`=== Meu Projeto ===`)
-  `!n`            Nome do projeto sem espaços
-  `!f`            Nome do projeto exatamente como informado
-  `!d`            Descrição do projeto
-  `!s`            Nome do usuário
-  `!t`            Data de criação (`DD/MM/AAAA`)
-  `\n`            Quebra de linha
+| Palavra-chave | Descrição |
+|---------------|-----------|
+| `!T` | Nome do projeto estilizado (`=== Meu Projeto ===`) |
+| `!n` | Nome do projeto sem espaços (`Meu Projeto` → `MeuProjeto`) |
+| `!f` | Nome do projeto exatamente como informado |
+| `!d` | Descrição do projeto |
+| `!s` | Nome do usuário definido em `config.json` |
+| `!t` | Data de criação (`DD/MM/AAAA`) |
+| `\n` | Quebra de linha |
 
 ## Exemplo
 
@@ -171,7 +170,7 @@ Palavras-chave disponíveis:
 // - Dia : 17/07/2026
 // - Exemplo de projeto criado com o molde "Molde_JS"
 
-// - Var
+// - Var:
 
 
 // - Programa:
