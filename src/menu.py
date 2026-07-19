@@ -3,6 +3,7 @@ from subprocess import run as runComandCMD
 from typing import Literal, TypedDict, Any
 from src.data import Config
 from src.utils import RenderGraphics
+from src.fileCreator import FileCrator
 import src.fileCreator as fileCreator
 
 class FilePayload(TypedDict):
@@ -36,7 +37,7 @@ class Menu:
                     if config_response == "exit": break
 
             if menu_response[0] == "create-file": 
-                op = fileCreator.createScript(Config.getValue("language"),menu_response[1]["name"],menu_response[1]["desc"],TARGET_FOLDER_PATH)
+                op = FileCrator.createScript(Config.getValue("language"),menu_response[1]["name"],menu_response[1]["desc"],TARGET_FOLDER_PATH)
                 if op : RenderGraphics.sucessFileCreation()
 
             runComandCMD("cls",shell=True)
