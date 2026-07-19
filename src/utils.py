@@ -1,10 +1,8 @@
 from src.data import Config
-from src.constants import Colors
-from typing import Literal, TypedDict, Callable, Any
+from src.constants import Colors,  menu_response_type, config_response_type
+from typing import Callable
 import re
 from time import sleep
-type menu_response_type = tuple[Literal["exit"]] | tuple[Literal["invalid-response"]] | tuple[Literal["config"]] | tuple[Literal["create-file"], FilePayload]
-type config_response_type = Literal["exit"] | Literal["fail-apply"] | Literal["sucess-apply"]
 
 class RenderGraphics:
     """

@@ -1,5 +1,9 @@
 from colorama import Fore, Style
+from typing import Literal
 import os
+
+type menu_response_type = tuple[Literal["exit"]] | tuple[Literal["invalid-response"]] | tuple[Literal["config"]] | tuple[Literal["create-file"], FilePayload]
+type config_response_type = Literal["exit"] | Literal["fail-apply"] | Literal["sucess-apply"]
 
 TARGET_FOLDER_PATH = path = os.getcwd()
 SRC_PATH_FOLDER = os.path.dirname(os.path.abspath(__file__))

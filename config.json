@@ -2,7 +2,7 @@
     "config": {
         "cooldown": 1.0,
         "flag": "0",
-        "language": "javascript",
+        "language": "visualg",
         "studentName": "Erick Alves",
         "creates": 0,
         "limitDescPerLine": 60

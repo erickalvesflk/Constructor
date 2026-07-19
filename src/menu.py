@@ -1,19 +1,13 @@
-from src.constants import Colors, TARGET_FOLDER_PATH
+from src.constants import Colors, TARGET_FOLDER_PATH, menu_response_type, config_response_type
 from subprocess import run as runComandCMD
-from typing import Literal, TypedDict, Callable, Any
-from time import sleep
+from typing import Literal, TypedDict, Any
 from src.data import Config
-from utils import RenderGraphics
+from src.utils import RenderGraphics
 import src.fileCreator as fileCreator
 
 class FilePayload(TypedDict):
     name: str
     desc: str
-
-
-
-type menu_response_type = tuple[Literal["exit"]] | tuple[Literal["invalid-response"]] | tuple[Literal["config"]] | tuple[Literal["create-file"], FilePayload]
-type config_response_type = Literal["exit"] | Literal["fail-apply"] | Literal["sucess-apply"]
 
 class Menu:
     """
